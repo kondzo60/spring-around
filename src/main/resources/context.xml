@@ -4,29 +4,13 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd">
 
-	<bean id="customerRepository" class="pl.bal.konrad.CustomerRepoImpl"></bean>
+	<bean id="someBean" class="pl.bal.konrad.SomeBean"></bean>
 	<bean id="loggingAspect" class="pl.bal.konrad.LoggingAspect"></bean>
-	<bean id="benchmarkAspect" class="pl.bal.konrad.BenchmarkAspect"></bean>
 
 	<aop:config>
-		<aop:pointcut
-			expression="execution(* pl.bal.konrad.CustomerRepository.get*(..) )"
-			id="allGetters" />
-		<aop:pointcut
-			expression="execution(* pl.bal.konrad.CustomerRepository.add*(..) )"
-			id="allAdders" />
 		<aop:aspect ref="loggingAspect">
-			<aop:before method="logExecution" pointcut-ref="allGetters" />
-			<aop:after-returning method="warnIfNull"
-				pointcut-ref="allGetters" returning="returnedValue" />
-			<aop:after-throwing method="serveException"
-				pointcut-ref="allAdders" throwing="ex" />
-			<aop:after method="methodExecuted" pointcut-ref="allAdders" />
+			<aop:before method="logWithStringExecution"
+				pointcut="execution(* pl.bal.konrad.SomeBean.*(String)) and args(arg)" />
 		</aop:aspect>
-		
-		<aop:aspect ref="benchmarkAspect">
-		<aop:around method="measureExecutionTime" pointcut="execution(* addCustomer(..))"/>
-		</aop:aspect>
-
 	</aop:config>
 </beans>
